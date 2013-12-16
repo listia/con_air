@@ -15,7 +15,7 @@ module ConAir
 
     module ClassMethods
       def connection_with_hijacking
-        connection_hijackings[connection_id] || connection_without_hijacking
+        connection_hijackings[connection_id] || connection_hijackings["#{self}_#{connection_id}"] || connection_without_hijacking
       end
     end
   end
