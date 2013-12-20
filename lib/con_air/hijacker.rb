@@ -5,17 +5,23 @@ module ConAir
     extend ActiveSupport::Concern
 
     included do
-      class_attribute :connection_hijackings
-      self.connection_hijackings = {}
+      class_attribute :handler_hijackings
+      self.handler_hijackings = {}
 
       class << self
-        alias_method_chain :connection, :hijacking
+        alias_method_chain :connection_handler, :hijacking
       end
     end
 
     module ClassMethods
-      def connection_with_hijacking
-        connection_hijackings[connection_id] || connection_without_hijacking
+      def connection_handler_with_hijacking
+        handler = handler_hijackings[connection_id]
+
+        if handler && handler.active
+          handler
+        else
+          connection_handler_without_hijacking
+        end
       end
     end
   end
