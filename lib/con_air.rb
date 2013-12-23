@@ -14,7 +14,8 @@ module ConAir
       ar.handler_hijackings[ar.connection_id] = ConnectionHandler.new(klass, spec)
     end
 
-    ar.establish_connection
+    # Init the hijaking connection for class
+    klass.establish_connection
 
     yield
   ensure

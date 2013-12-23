@@ -9,6 +9,9 @@ module ConAir
 
       @hijacked_spec = hijacked_spec
       @swap_class = swap_class
+
+      # Init all connections after switching handler
+      ActiveRecord::Base.establish_connection
     end
 
     def establish_connection(name, spec)

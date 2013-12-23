@@ -16,7 +16,7 @@ describe ConAir do
         @new_handler = DummyHandler.new
         @config = double
 
-        allow(ActiveRecord::Base).to receive(:establish_connection)
+        allow(klass).to receive(:establish_connection)
         allow(@new_handler).to receive(:hijacked_spec).and_return(double(config: @config))
         allow(ConAir::ConnectionHandler).to receive(:new).with(klass, @spec).and_return(@new_handler)
         allow(ActiveRecord::Base::ConnectionSpecification).to receive(:new).and_return(@spec)
