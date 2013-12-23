@@ -11,18 +11,9 @@ module ConAir
       @swap_class = swap_class
 
       # Init connections after switching handler
-
       ActiveRecord::Base.establish_connection
-      establish_connection(hijacked_spec, swap_class)
-    end
-
-    def establish_connection(name, spec)
-      if name == swap_class.name
-        @connection_pools[@hijacked_spec] ||= ActiveRecord::ConnectionAdapters::ConnectionPool.new(@hijacked_spec)
-        @class_to_pool[name] = @connection_pools[@hijacked_spec]
-      else
-        super
-      end
+      @connection_pools[@hijacked_spec] ||= ActiveRecord::ConnectionAdapters::ConnectionPool.new(@hijacked_spec)
+      @class_to_pool[@swap_class.name] = @connection_pools[@hijacked_spec]
     end
 
     def exist?(config, klass)

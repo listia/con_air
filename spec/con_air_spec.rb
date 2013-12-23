@@ -43,7 +43,7 @@ describe ConAir do
       end
 
       it "establish connection" do
-        expect(ActiveRecord::Base).to receive(:establish_connection)
+        expect(klass).to receive(:establish_connection)
 
         ConAir.hijack(@config, klass) { }
       end

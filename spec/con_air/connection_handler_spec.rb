@@ -3,31 +3,31 @@ require "spec_helper"
 describe ConAir::ConnectionHandler do
   before do
     @swap_class = double(name: "Swap")
-    @config = double
+    @config = double.as_null_object
     @spec = double(config: @config)
-    @original_spec = double
-    @handler = ConAir::ConnectionHandler.new(@swap_class, @spec)
   end
 
-  context "#establish_connection" do
-    context "when class matches the one we want to swap" do
-      it "creates pool using passing in spec" do
-        expect(ActiveRecord::ConnectionAdapters::ConnectionPool).to receive(:new).with(@spec)
+  context "#new" do
+    it "creates pool using passed-in spec" do
+      handler = ConAir::ConnectionHandler.new(@swap_class, @spec)
+      pool = handler.connection_pools[@spec]
 
-        @handler.establish_connection(@swap_class.name, @original_spec)
-      end
+      expect(pool).to be_instance_of(ActiveRecord::ConnectionAdapters::ConnectionPool)
+      expect(pool.spec).to eq(@spec)
     end
 
-    context "when class does not match the one we want to swap" do
-      it "creates pool using original in spec" do
-        expect(ActiveRecord::ConnectionAdapters::ConnectionPool).to receive(:new).with(@original_spec)
+    it "establishes activerecords connection" do
+      expect(ActiveRecord::Base).to receive(:establish_connection)
 
-        @handler.establish_connection("SomeClass", @original_spec)
-      end
+      ConAir::ConnectionHandler.new(@swap_class, @spec)
     end
   end
 
   context "#exist?" do
+    before do
+      @handler = ConAir::ConnectionHandler.new(@swap_class, @spec)
+    end
+
     context "when has same config and class to swap" do
       it "returns true" do
         expect(@handler.exist?(@config, @swap_class)).to be(true)
