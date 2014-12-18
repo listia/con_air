@@ -10,7 +10,7 @@ module ConAir
     if handler && handler.exist?(config, klass)
       handler.active = true
     else
-      spec = ActiveRecord::Base::ConnectionSpecification.new(config, klass.connection_pool.spec.adapter_method)
+      spec = ActiveRecord::ConnectionAdapters::ConnectionSpecification.new(config, klass.connection_pool.spec.adapter_method)
       ar.handler_hijackings[ar.connection_id] = ConnectionHandler.new(klass, spec)
     end
 
