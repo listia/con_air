@@ -4,8 +4,8 @@ module ConAir
     attr_reader :hijacked_spec
     attr_reader :swap_class
 
-    def initialize(swap_class, hijacked_spec, pools = {})
-      super(pools)
+    def initialize(swap_class, hijacked_spec)
+      super()
 
       @hijacked_spec = hijacked_spec
       @swap_class = swap_class
